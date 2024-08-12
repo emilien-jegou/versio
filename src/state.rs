@@ -419,7 +419,7 @@ impl PickPath {
       .with_context(|| format!("Can't read file {}.", self.file.to_string_lossy()))?;
     let data = NamedData::new(self.file.clone(), data);
     let mut mark = self.picker.scan(data)?;
-    mark.write_new_value(val)?;
+    mark.write_new_value_if_higher(val)?;
     Ok(())
   }
 }

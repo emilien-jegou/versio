@@ -135,8 +135,26 @@ impl NamedData {
 
 pub struct MarkedData {
   writeable_path: PathBuf,
-  data: String,
-  mark: Mark
+  pub data: String,
+  pub mark: Mark
+}
+
+fn version_is_higher(version1: &str, version2: &str) -> bool {
+  let v1_parts: Vec<u32> = version1.split('.').map(|s| s.parse().unwrap()).collect();
+  let v2_parts: Vec<u32> = version2.split('.').map(|s| s.parse().unwrap()).collect();
+
+  for i in 0 .. v1_parts.len().max(v2_parts.len()) {
+    let v1 = *v1_parts.get(i).unwrap_or(&0);
+    let v2 = *v2_parts.get(i).unwrap_or(&0);
+
+    if v1 > v2 {
+      return true;
+    } else if v1 < v2 {
+      return false;
+    }
+  }
+
+  false
 }
 
 impl MarkedData {
@@ -147,9 +165,11 @@ impl MarkedData {
   pub fn value(&self) -> &str { self.mark.value() }
   pub fn start(&self) -> usize { self.mark.start() }
 
-  pub fn write_new_value(&mut self, new_val: &str) -> Result<()> {
-    self.set_value(new_val);
-    self.write()?;
+  pub fn write_new_value_if_higher(&mut self, new_val: &str) -> Result<()> {
+    if version_is_higher(new_val, self.mark.value()) {
+      self.set_value(new_val);
+      self.write()?;
+    }
     Ok(())
   }
 
