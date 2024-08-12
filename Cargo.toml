@@ -12,6 +12,7 @@ categories = ["command-line-utilities", "config"]
 
 [dependencies]
 anyhow = "1.0.68"
+time = "0.3.36"
 chrono = "0.4.22"
 clap = { version = "4.0.18", features = ["wrap_help", "cargo", "derive"] }
 dirs = "4.0.0"
