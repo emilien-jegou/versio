@@ -1,3 +1,5 @@
 /target
 TODO*
 /.versio-paused
+.direnv
+.packages
